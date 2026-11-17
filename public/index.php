@@ -1,4 +1,5 @@
 <?php
+if (PHP_SAPI === 'cli-server' && is_file(__DIR__.parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH))) return false;
 require __DIR__.'/../src/bootstrap.php';
 $path=parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH);
 if($path==='/api/lessons'){ $rows=$db->query('SELECT id,title,description,audio_path,features FROM lessons ORDER BY id DESC')->fetchAll(PDO::FETCH_ASSOC);jsonResponse($rows); }
