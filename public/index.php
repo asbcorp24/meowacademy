@@ -14,12 +14,12 @@ if($path==='/admin'){
  $mime=(new finfo(FILEINFO_MIME_TYPE))->file($file['tmp_name']);$ext=['audio/mpeg'=>'mp3','audio/wav'=>'wav','audio/x-wav'=>'wav','audio/ogg'=>'ogg','application/ogg'=>'ogg'][$mime]??null;
  if(!$ext){http_response_code(422);exit('Unsupported audio format');}
  $name=bin2hex(random_bytes(16)).'.'.$ext;if(!move_uploaded_file($file['tmp_name'],ROOT.'/storage/uploads/'.$name)){http_response_code(500);exit('Upload failed');}
- $features=json_decode((string)($_POST['features']??'{}'),true);if(!is_array($features))$features=[];
+ $raw=(string)($_POST['features']??'');if(strlen($raw)>3000000){http_response_code(422);exit('Features too large');}$features=json_decode($raw,true);if(!is_array($features)||($features['version']??null)!==2||!isset($features['frames'])||!is_array($features['frames'])||count($features['frames'])>5000){http_response_code(422);exit('Invalid acoustic features');}
  $st=$db->prepare('INSERT INTO lessons(title,description,audio_path,features) VALUES(?,?,?,?)');$st->execute([$title,trim((string)($_POST['description']??'')),'/audio/'.$name,json_encode($features)]);header('Location: /admin');exit;
  }
  $rows=$db->query('SELECT id,title,created_at FROM lessons ORDER BY id DESC')->fetchAll(PDO::FETCH_ASSOC);
  echo '<!doctype html><html lang="ru"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><link rel="stylesheet" href="/assets/style.css"><main class="shell"><a href="/">← На главную</a><h1>🐾 Админка МяуАкадемии</h1><section class="panel"><h2>Новый эталон</h2><form method="post" enctype="multipart/form-data"><input type="hidden" name="csrf" value="'.htmlspecialchars(csrf()).'"><label>Название<input name="title" maxlength="120" required></label><label>Описание<textarea name="description"></textarea></label><label>Аудио (MP3, WAV, OGG до 12 МБ)<input name="audio" type="file" accept="audio/*" required></label><input type="hidden" name="features" value="{}"><button>Добавить урок</button></form></section><section class="panel"><h2>Уроки</h2>';
- foreach($rows as $row)echo '<p>#'.(int)$row['id'].' — '.htmlspecialchars($row['title']).'</p>';echo '</section></main></html>';exit;
+ foreach($rows as $row)echo '<p>#'.(int)$row['id'].' — '.htmlspecialchars($row['title']).'</p>';echo '</section></main><script type="module" src="/assets/admin.js"></script></html>';exit;
 }
 if($path==='/login'){
  if($_SERVER['REQUEST_METHOD']==='POST'){requireCsrf();$expected=getenv('MEOW_ADMIN_PASSWORD');if($expected!==false&&strlen($expected)>=12&&hash_equals($expected,(string)($_POST['password']??''))){session_regenerate_id(true);$_SESSION['admin']=true;header('Location: /admin');exit;}$error='Неверный пароль или пароль администратора не настроен';}
