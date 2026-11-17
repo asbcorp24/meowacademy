@@ -1,6 +1,6 @@
 import {analyze,compare as compareAudio} from './dsp.js';
 const $=id=>document.getElementById(id);let lessons=[],stream,recorder,chunks=[],recording,ctx;
-async function init(){lessons=await(await fetch('/api/lessons')).json();$('lessons').innerHTML=lessons.length?lessons.map(x=>`<option value="${x.id}">${escapeHtml(x.title)}</option>`).join(''):'<option>Нет уроков — загрузите в админке</option>';select();}
+async function init(){lessons=(await(await fetch('/api/lessons')).json()).map(l=>({...l,features:typeof l.features==='string'?JSON.parse(l.features):l.features}));$('lessons').innerHTML=lessons.length?lessons.map(x=>`<option value="${x.id}">${escapeHtml(x.title)}</option>`).join(''):'<option>Нет уроков — загрузите в админке</option>';select();}
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function select(){let l=lessons.find(x=>String(x.id)===$('lessons').value);$('reference').src=l?.audio_path||'';$('description').textContent=l?.description||'';}
 $('lessons').onchange=select;
