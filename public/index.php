@@ -35,5 +35,6 @@ if($path==='/login'){
  echo '<!doctype html><html lang="ru"><meta charset="utf-8"><link rel="stylesheet" href="/assets/style.css"><main class="shell"><h1>🐱 Вход администратора</h1><form class="panel" method="post"><input type="hidden" name="csrf" value="'.htmlspecialchars(csrf()).'"><input type="password" name="password" placeholder="Пароль" required><button>Войти</button></form>'.htmlspecialchars($error??'').'</main></html>';exit;
 }
 if(preg_match('~^/audio/([a-f0-9]{32}\.(?:mp3|wav|ogg))$~',$path,$m)){$file=ROOT.'/storage/uploads/'.$m[1];if(!is_file($file)){http_response_code(404);exit;}header('Content-Type: '.(['mp3'=>'audio/mpeg','wav'=>'audio/wav','ogg'=>'audio/ogg'][pathinfo($file,PATHINFO_EXTENSION)]));header('X-Content-Type-Options: nosniff');readfile($file);exit;}
+if($path==='/realtime'){readfile(__DIR__.'/realtime.html');exit;}
 if($path!=='/'){http_response_code(404);exit('Not found');}
 readfile(__DIR__.'/app.html');
