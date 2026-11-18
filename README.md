@@ -7,11 +7,22 @@ PHP + SQLite прототип тренажёра кошачьего мяукан
 Нужны PHP 8.3+, расширения `pdo_sqlite`, `fileinfo`, `mbstring` и современный браузер.
 
 ```bash
-export MEOW_ADMIN_PASSWORD='replace-with-a-long-random-password'
 php -S localhost:8000 -t public public/index.php
 ```
 
 Откройте http://localhost:8000. Админка: `/login` → `/admin`. Для записи микрофона на удалённом сервере требуется HTTPS (localhost — исключение).
+
+### Пароль администратора
+
+Скопируйте `storage/admin_password.txt.example` в `storage/admin_password.txt`, затем замените содержимое файла своим паролем длиной не менее 12 символов. В файле должна быть **одна строка** с паролем, без кавычек. PHP должен иметь право читать файл.
+
+```bash
+cp storage/admin_password.txt.example storage/admin_password.txt
+nano storage/admin_password.txt
+chmod 640 storage/admin_password.txt
+```
+
+Для Apache с пользователем `www-data` выдайте файлу подходящие владельца/группу (например, `chown deploy:www-data storage/admin_password.txt`). Файл исключён из Git. Никогда не размещайте его в `public` и не публикуйте в репозитории.
 
 ## Что реализовано
 
