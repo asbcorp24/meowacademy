@@ -1,3 +1,4 @@
 /storage/db/*.sqlite*
 /storage/uploads/*
 !/storage/uploads/.gitkeep
+/storage/admin_password.txt
