@@ -23,7 +23,15 @@ if($path==='/admin'){
  foreach($rows as $row)echo '<p>#'.(int)$row['id'].' — '.htmlspecialchars($row['title']).'</p>';echo '</section></main><script type="module" src="/assets/admin.js"></script></html>';exit;
 }
 if($path==='/login'){
- if($_SERVER['REQUEST_METHOD']==='POST'){requireCsrf();$expected=getenv('MEOW_ADMIN_PASSWORD');if($expected!==false&&strlen($expected)>=12&&hash_equals($expected,(string)($_POST['password']??''))){session_regenerate_id(true);$_SESSION['admin']=true;header('Location: /admin');exit;}$error='Неверный пароль или пароль администратора не настроен';}
+ if($_SERVER['REQUEST_METHOD']==='POST'){
+  requireCsrf();
+  $passwordFile=ROOT.'/storage/admin_password.txt';
+  $expected=is_readable($passwordFile)?trim((string)file_get_contents($passwordFile)):'';
+  if(strlen($expected)>=12&&hash_equals($expected,(string)($_POST['password']??''))){
+   session_regenerate_id(true);$_SESSION['admin']=true;header('Location: /admin');exit;
+  }
+  $error='Неверный пароль или файл пароля не настроен';
+ }
  echo '<!doctype html><html lang="ru"><meta charset="utf-8"><link rel="stylesheet" href="/assets/style.css"><main class="shell"><h1>🐱 Вход администратора</h1><form class="panel" method="post"><input type="hidden" name="csrf" value="'.htmlspecialchars(csrf()).'"><input type="password" name="password" placeholder="Пароль" required><button>Войти</button></form>'.htmlspecialchars($error??'').'</main></html>';exit;
 }
 if(preg_match('~^/audio/([a-f0-9]{32}\.(?:mp3|wav|ogg))$~',$path,$m)){$file=ROOT.'/storage/uploads/'.$m[1];if(!is_file($file)){http_response_code(404);exit;}header('Content-Type: '.(['mp3'=>'audio/mpeg','wav'=>'audio/wav','ogg'=>'audio/ogg'][pathinfo($file,PATHINFO_EXTENSION)]));header('X-Content-Type-Options: nosniff');readfile($file);exit;}
