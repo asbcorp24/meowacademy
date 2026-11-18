@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Мяу в реальном времени — МяуАкадемия 🐱</title>
+  <link rel="stylesheet" href="/assets/style.css"><link rel="stylesheet" href="/assets/realtime.css">
+</head>
+<body>
+  <header class="shell top"><a class="logo" href="/">🐱 МяуАкадемия</a><nav><a href="/">🎙 Запись</a><a class="active" href="/realtime">⚡ Реалтайм</a><a href="/admin">⚙ Админка</a></nav></header>
+  <main class="shell">
+    <section class="realtime-hero"><span class="eyebrow">🐾 Дуэт с котиком</span><h1>Мяукай вместе! <span>🎧</span></h1><p>Слушай эталон в наушниках, мяукай одновременно и наблюдай, насколько близки ваши интонации.</p></section>
+    <section class="headphone-note" role="note"><span>🎧</span><div><strong>Надень наушники перед стартом</strong><p>Эталон играет в наушниках, микрофон слушает только тебя. Без наушников звук эталона может попасть в микрофон и исказить анализ.</p></div></section>
+    <div class="realtime-layout">
+      <section class="panel control-panel"><h2>🐈 Настрой дуэт</h2>
+        <label for="lesson">Какой мяу повторяем?<select id="lesson"></select></label>
+        <p id="description" class="muted"></p>
+        <label for="volume">Громкость котика <output id="volumeValue">75%</output><input id="volume" type="range" min="0" max="100" value="75"></label>
+        <label for="offset">Поправка задержки микрофона <output id="offsetValue">0 мс</output><input id="offset" type="range" min="-250" max="250" step="10" value="0"></label>
+        <div class="actions"><button id="start">▶ Начать дуэт</button><button id="stop" disabled>■ Остановить</button></div>
+        <p class="status" id="status" role="status" aria-live="polite">Выбери урок и нажми «Начать дуэт».</p>
+        <div class="progress-track"><div id="progress"></div></div><p class="tiny" id="time">0:00 / 0:00</p>
+      </section>
+      <section class="panel dashboard"><h2>✨ Твоё мяу сейчас</h2>
+        <div class="live-stats"><div><span>Твоя высота F0</span><strong id="userPitch">—</strong></div><div><span>Эталон F0</span><strong id="refPitch">—</strong></div><div><span>Совпадение тона</span><strong id="match">—</strong></div></div>
+        <div class="tip-card" id="tip" aria-live="polite">🐾 Подсказки появятся во время дуэта.</div>
+        <div class="legend"><span><i class="swatch reference"></i> Котик</span><span><i class="swatch microphone"></i> Ты</span></div>
+        <h3>🎼 Высота тона (F0)</h3><canvas id="pitchChart" width="940" height="260" aria-label="Живой график высоты тона эталона и микрофона"></canvas>
+        <h3>🔊 Громкость</h3><canvas id="volumeChart" width="940" height="150" aria-label="Живой график громкости эталона и микрофона"></canvas>
+        <p class="muted tiny">Графики показывают приблизительный акустический анализ. Для лучшего сравнения следи за движением линии вверх и вниз, а не только за абсолютной высотой голоса.</p>
+      </section>
+    </div>
+    <section class="panel"><h2>Как тренироваться?</h2><div class="steps"><div>① Подключи наушники и разреши микрофон.</div><div>② Нажми «Начать дуэт» — запись эталона и анализ стартуют вместе.</div><div>③ Мяукай параллельно. Подсказки покажут, где поднять или опустить голос и изменить громкость.</div></div><p class="muted tiny">Для микрофона нужен HTTPS или localhost. При беспроводных наушниках задержку можно скорректировать ползунком. Звук микрофона не отправляется на сервер.</p></section>
+  </main>
+  <footer>Мяукай смело. Котики поддерживают! 🐈</footer>
+  <script type="module" src="/assets/realtime.js"></script>
+</body></html>
