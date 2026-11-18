@@ -2,6 +2,7 @@ import {align,alignedErrors} from './alignment.js';
 import {mountSpectrogram,bindSegmentButtons} from './spectrogram.js';
 import {analyze,compare as compareAudio} from './dsp.js';
 const realtimeLink=document.createElement('a');realtimeLink.href='/realtime';realtimeLink.textContent='⚡ Мяу в реальном времени';realtimeLink.className='realtime-link';document.querySelector('.top')?.insertBefore(realtimeLink,document.querySelector('.top a[href="/admin"]'));
+const catsLink=document.createElement('a');catsLink.href='/cats';catsLink.textContent='🐾 Мяуканья котиков';document.querySelector('.top')?.insertBefore(catsLink,document.querySelector('.top a[href="/admin"]'));
 const $=id=>document.getElementById(id);let lessons=[],stream,recorder,chunks=[],recording,ctx;
 async function init(){lessons=(await(await fetch('/api/lessons')).json()).map(l=>({...l,features:typeof l.features==='string'?JSON.parse(l.features):l.features}));$('lessons').innerHTML=lessons.length?lessons.map(x=>`<option value="${x.id}">${escapeHtml(x.title)}</option>`).join(''):'<option>Нет уроков — загрузите в админке</option>';select();}
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
